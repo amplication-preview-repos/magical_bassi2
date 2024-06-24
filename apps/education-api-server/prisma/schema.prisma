@@ -1,0 +1,55 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Unit {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String?
+  topics    Topic[]
+  updatedAt DateTime @updatedAt
+}
+
+model Topic {
+  createdAt   DateTime     @default(now())
+  flowcharts  Flowchart[]
+  id          String       @id @default(cuid())
+  name        String?
+  notes       Note[]
+  umlDiagrams UmlDiagram[]
+  unit        Unit?        @relation(fields: [unitId], references: [id])
+  unitId      String?
+  updatedAt   DateTime     @updatedAt
+}
+
+model Note {
+  content   String?
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  topic     Topic?   @relation(fields: [topicId], references: [id])
+  topicId   String?
+  updatedAt DateTime @updatedAt
+}
+
+model UmlDiagram {
+  createdAt      DateTime @default(now())
+  diagramContent Json?
+  id             String   @id @default(cuid())
+  topic          Topic?   @relation(fields: [topicId], references: [id])
+  topicId        String?
+  updatedAt      DateTime @updatedAt
+}
+
+model Flowchart {
+  createdAt      DateTime @default(now())
+  diagramContent Json?
+  id             String   @id @default(cuid())
+  topic          Topic?   @relation(fields: [topicId], references: [id])
+  topicId        String?
+  updatedAt      DateTime @updatedAt
+}
